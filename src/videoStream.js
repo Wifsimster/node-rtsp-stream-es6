@@ -1,4 +1,4 @@
-const ws = require('ws')
+const io = require('socket.io')()
 const EventEmitter = require('events')
 const STREAM_MAGIC_BYTES = "jsmp"
 
@@ -21,9 +21,9 @@ class VideoStream extends EventEmitter {
 
   startMpeg1Stream() {
     this.mpeg1Muxer = new Mpeg1Muxer({ url: this.streamUrl })
-    
+
     if (this.inputStreamStarted) { return }
-    
+
     this.mpeg1Muxer.on('mpeg1data', (data) => {
       return this.emit('camdata', data) 
     })
@@ -62,10 +62,12 @@ class VideoStream extends EventEmitter {
   }
 
   pipeStreamToSocketServer() {
-    this.wsServer = new ws.Server({ port: this.wsPort })
-    this.wsServer.on("connection", (socket) => {
-      return this.onSocketConnect(socket)
-    })
+    io.on('connection', (socket) => {
+      console.log('New socket')
+      this.onSocketConnect(socket)
+    })    
+    io.listen(5000)    
+    this.wsServer = io
     this.wsServer.broadcast = (data, opts) => {
       const _results = []
       for (var i in this.clients) {
