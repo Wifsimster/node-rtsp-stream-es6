@@ -4,7 +4,8 @@ First of all, it's a fork of [**node-rtsp-stream**](https://www.npmjs.com/packag
 
 ## Differences with the original module
 
-This version use Socket.io instead of WS and is written in ES6 instead.
+- [Socket.io](https://github.com/socketio/socket.io/) instead of [WS](https://github.com/websockets/ws)
+- ES6 instead of CoffeeScript
 
 ## Description
 
