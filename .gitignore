@@ -17,6 +17,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+node_modules/
+dist/
+
 # =========================
 # Operating System Files
 # =========================
@@ -45,3 +48,14 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+database.sqlite
+src/back/db/database.sqlite
+npm-debug.log.1732676291
+*.sqlite
+src/back/db/database.sqlite-journal
+*.sqlite
+*.sqlite
+*.sqlite
+*.sqlite
+src/back/db/database.sqlite
+src/back/db/database.sqlite
