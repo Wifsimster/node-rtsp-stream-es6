@@ -6,6 +6,7 @@ First of all, it's a fork of [**node-rtsp-stream**](https://www.npmjs.com/packag
 
 - [Socket.io](https://github.com/socketio/socket.io/) instead of [WS](https://github.com/websockets/ws)
 - ES6 instead of CoffeeScript
+- Github repository
 
 ## Description
 
