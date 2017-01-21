@@ -1,6 +1,6 @@
-# node-rtsp-stream
+# node-rtsp-stream-es6
 
-First of all, it's a fork of *node-rtsp-stream* : https://www.npmjs.com/package/node-rtsp-stream
+First of all, it's a fork of **node-rtsp-stream** : https://www.npmjs.com/package/node-rtsp-stream
 
 ## Differences with the original module
 
@@ -13,6 +13,4 @@ HTML5 streaming video!
 
 ## Requirements
 
-You need to download and install FFMPEG
-
-https://ffmpeg.org/download.html
+You need to download and install FFMPEG : https://ffmpeg.org/download.html
