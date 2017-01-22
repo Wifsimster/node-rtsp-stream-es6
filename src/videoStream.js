@@ -1,8 +1,7 @@
-const io = require('socket.io')()
+const WebSocket = require('ws')
 const EventEmitter = require('events')
 const STREAM_MAGIC_BYTES = "jsmp"
-
-Mpeg1Muxer = require('./mpeg1muxer')
+const Mpeg1Muxer = require('./mpeg1muxer')
 
 class VideoStream extends EventEmitter {
 
@@ -17,39 +16,26 @@ class VideoStream extends EventEmitter {
     this.stream2Socket()
   }
 
-  stream2Socket() {
-    io.on('connection', (socket) => { 
-      //      this.onSocketConnect(socket) 
-
+  stream2Socket() {    
+    const server = new WebSocket.Server({ port: this.port })
+    server.on('connection', (socket) => {
+      
       console.log(`New connection: ${this.name}`)
-
+      
       let streamHeader = new Buffer(8)
       streamHeader.write(STREAM_MAGIC_BYTES)
       streamHeader.writeUInt16BE(this.width, 4)
-      streamHeader.writeUInt16BE(this.height, 6)
-      socket.broadcast.emit('stream', streamHeader)
+      streamHeader.writeUInt16BE(this.height, 6)      
+      socket.send(streamHeader)
 
-      this.on('camdata', (data) => { socket.broadcast.emit('stream', data) })     
+      this.on('camdata', (data) => {
+        server.clients.forEach((client) => {
+          if(client.readyState === WebSocket.OPEN) { client.send(data) }
+        })
+      })
 
-      socket.on('disconnect', () => { console.log(`${this.name} disconnected !`) })
-
+      socket.on('close', () => { console.log(`${this.name} disconnected !`) })
     })
-
-    io.listen(this.port)
-
-    //    io.broadcast = (data, opts) => {
-    //      let results = []
-    //      for (var i in this.clients) {
-    //        if (this.clients[i].readyState === 1) {
-    //          results.push(this.clients[i].send(data, opts))
-    //        } else {
-    //          results.push(console.log(`Error: Client (${i}) not connected`))
-    //        }
-    //      }
-    //      return results
-    //    }
-
-    //    return this.on('camdata', (data) => { return this.wsServer.broadcast(data) })
   }
 
   onSocketConnect(socket) {

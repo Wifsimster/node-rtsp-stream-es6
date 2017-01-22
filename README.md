@@ -4,13 +4,12 @@ First of all, it's a fork of [**node-rtsp-stream**](https://www.npmjs.com/packag
 
 ## Differences with the original module
 
-- [Socket.io](https://github.com/socketio/socket.io/) instead of [WS](https://github.com/websockets/ws)
-- ES6 instead of CoffeeScript
+- Written in ES6 instead of CoffeeScript
 - Github repository
 
 ## Description
 
-Stream any RTSP stream and output to websocket for consumption by [jsmpeg](https://github.com/phoboslab/jsmpeg).
+Stream any RTSP stream and output to [WebSocket](https://github.com/websockets/ws) for consumption by [jsmpeg](https://github.com/phoboslab/jsmpeg).
 HTML5 streaming video!
 
 ## Requirements
