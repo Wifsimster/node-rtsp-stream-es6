@@ -9,30 +9,70 @@ class VideoStream extends EventEmitter {
   constructor(options) {
     super(options)
     this.name = options.name
-    this.streamUrl = options.streamUrl
+    this.url = options.url
     this.width = options.width
     this.height = options.height
-    this.wsPort = options.wsPort
-    this.inputStreamStarted = false
+    this.port = options.port
     this.stream = void 0
-    this.startMpeg1Stream()
-    this.pipeStreamToSocketServer()
+    this.stream2Socket()
   }
 
-  startMpeg1Stream() {
-    this.mpeg1Muxer = new Mpeg1Muxer({ url: this.streamUrl })
+  stream2Socket() {
+    io.on('connection', (socket) => { 
+      //      this.onSocketConnect(socket) 
 
-    if (this.inputStreamStarted) { return }
+      console.log(`New connection: ${this.name}`)
 
+      let streamHeader = new Buffer(8)
+      streamHeader.write(STREAM_MAGIC_BYTES)
+      streamHeader.writeUInt16BE(this.width, 4)
+      streamHeader.writeUInt16BE(this.height, 6)
+      socket.broadcast.emit('stream', streamHeader)
+
+      this.on('camdata', (data) => { socket.broadcast.emit('stream', data) })     
+
+      socket.on('disconnect', () => { console.log(`${this.name} disconnected !`) })
+
+    })
+
+    io.listen(this.port)
+
+    //    io.broadcast = (data, opts) => {
+    //      let results = []
+    //      for (var i in this.clients) {
+    //        if (this.clients[i].readyState === 1) {
+    //          results.push(this.clients[i].send(data, opts))
+    //        } else {
+    //          results.push(console.log(`Error: Client (${i}) not connected`))
+    //        }
+    //      }
+    //      return results
+    //    }
+
+    //    return this.on('camdata', (data) => { return this.wsServer.broadcast(data) })
+  }
+
+  onSocketConnect(socket) {
+    let streamHeader = new Buffer(8)
+    streamHeader.write(STREAM_MAGIC_BYTES)
+    streamHeader.writeUInt16BE(this.width, 4)
+    streamHeader.writeUInt16BE(this.height, 6)
+    socket.send(streamHeader, { binary: true })
+    console.log(`New connection: ${this.name} - ${this.wsServer.clients.length} total`)
+    return socket.on("close", function(code, message) {
+      return console.log(`${this.name} disconnected - ${this.wsServer.clients.length} total`)
+    })
+  }
+
+  start() {
+    this.mpeg1Muxer = new Mpeg1Muxer({ url: this.url })
     this.mpeg1Muxer.on('mpeg1data', (data) => {
       return this.emit('camdata', data) 
     })
-
     let gettingInputData = false
     let inputData = []
     let gettingOutputData = false
     let outputData = []
-
     this.mpeg1Muxer.on('ffmpegError', (data) => {
       data = data.toString()
       if (data.indexOf('Input #') !== -1) { gettingInputData = true }
@@ -59,39 +99,6 @@ class VideoStream extends EventEmitter {
       return global.process.stderr.write(data)
     })
     return this
-  }
-
-  pipeStreamToSocketServer() {
-    io.on('connection', (socket) => {
-      console.log('New socket')
-      this.onSocketConnect(socket)
-    })    
-    io.listen(5000)    
-    this.wsServer = io
-    this.wsServer.broadcast = (data, opts) => {
-      const _results = []
-      for (var i in this.clients) {
-        if (this.clients[i].readyState === 1) {
-          _results.push(this.clients[i].send(data, opts))
-        } else {
-          _results.push(console.log("Error: Client (" + i + ") not connected."))
-        }
-      }
-      return _results
-    }
-    return this.on('camdata', (data) => { return this.wsServer.broadcast(data) })
-  }
-
-  onSocketConnect(socket) {
-    const streamHeader = new Buffer(8)
-    streamHeader.write(STREAM_MAGIC_BYTES)
-    streamHeader.writeUInt16BE(this.width, 4)
-    streamHeader.writeUInt16BE(this.height, 6)
-    socket.send(streamHeader, { binary: true })
-    console.log(("" + this.name + ": New WebSocket Connection (") + this.wsServer.clients.length + " total)")
-    return socket.on("close", function(code, message) {
-      return console.log(("" + this.name + ": Disconnected WebSocket (") + this.wsServer.clients.length + " total)")
-    })
   }
 }
 

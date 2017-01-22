@@ -1,5 +1,5 @@
-var server = require('http').createServer()
-var ioc = require('socket.io-client')
+const server = require('http').createServer()
+const ioc = require('socket.io-client')
 const port = 5000
 
 var srv = server.listen(() => {
@@ -10,7 +10,6 @@ var srv = server.listen(() => {
   
   socket.on('connect', () => {
     console.log('Connected !')
-    socket.close()
   })
   
 })
