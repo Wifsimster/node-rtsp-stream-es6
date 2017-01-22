@@ -19,9 +19,9 @@ class VideoStream extends EventEmitter {
   stream2Socket() {    
     const server = new WebSocket.Server({ port: this.port })
     server.on('connection', (socket) => {
-      
+
       console.log(`New connection: ${this.name}`)
-      
+
       let streamHeader = new Buffer(8)
       streamHeader.write(STREAM_MAGIC_BYTES)
       streamHeader.writeUInt16BE(this.width, 4)
@@ -50,15 +50,15 @@ class VideoStream extends EventEmitter {
     })
   }
 
-  start() {
-    this.mpeg1Muxer = new Mpeg1Muxer({ url: this.url })
-    this.mpeg1Muxer.on('mpeg1data', (data) => {
-      return this.emit('camdata', data) 
-    })
+  start() {    
+    this.mpeg1Muxer = new Mpeg1Muxer({ url: this.url })    
+    this.mpeg1Muxer.on('mpeg1data', (data) => { return this.emit('camdata', data) })
+
     let gettingInputData = false
-    let inputData = []
     let gettingOutputData = false
+    let inputData = []
     let outputData = []
+
     this.mpeg1Muxer.on('ffmpegError', (data) => {
       data = data.toString()
       if (data.indexOf('Input #') !== -1) { gettingInputData = true }
@@ -72,18 +72,12 @@ class VideoStream extends EventEmitter {
         let size = data.match(/\d+x\d+/)
         if (size != null) {
           size = size[0].split('x')
-          if (this.width == null) {
-            this.width = parseInt(size[0], 10)
-          }
-          if (this.height == null) {
-            return this.height = parseInt(size[1], 10)
-          }
+          if (this.width == null) { this.width = parseInt(size[0], 10) }
+          if (this.height == null) { return this.height = parseInt(size[1], 10) }
         }
       }
     })
-    this.mpeg1Muxer.on('ffmpegError', (data) => {
-      return global.process.stderr.write(data)
-    })
+    this.mpeg1Muxer.on('ffmpegError', (data) => { return global.process.stderr.write(data) })
     return this
   }
 }
