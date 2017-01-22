@@ -1,6 +1,6 @@
 {
   "name": "node-rtsp-stream-es6",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "RTSP stream through WebSocket",
   "main": "index.js",
   "author": "Wifsimster",

@@ -1,3 +1,1 @@
-module.exports = () => {
-  return new require('./src/videoStream')
-}
+module.exports = require('./src/videoStream')
