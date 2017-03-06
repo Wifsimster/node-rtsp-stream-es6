@@ -19,7 +19,7 @@ You need to download and install [FFMPEG](https://ffmpeg.org/download.html).
 ##Installation
 
 ```
-npm i node-rstp-stream-es6
+npm i node-rtsp-stream-es6
 ```
 
 ## Server
