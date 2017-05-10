@@ -24,7 +24,7 @@ npm i node-rtsp-stream-es6
 
 ## Server
 
-```
+```javascript
 const Stream = require('videoStream')
 
 const options = {
@@ -41,7 +41,7 @@ stream.start()
 
 ## Client
 
-```
+```javascript
 const WebSocket = require('ws')
 const ws = new WebSocket('ws://localhost:5000')
 
