@@ -16,9 +16,9 @@ HTML5 streaming video!
 
 You need to download and install [FFMPEG](https://ffmpeg.org/download.html).
 
-##Installation
+## Installation
 
-```
+```shell
 npm i node-rtsp-stream-es6
 ```
 
