@@ -9,3 +9,5 @@ const options = {
 stream = new Stream(options)
 
 stream.start()
+
+setTimeout(stream.stop.bind(stream), 10 * 1000)
