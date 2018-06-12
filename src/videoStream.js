@@ -81,8 +81,8 @@ class VideoStream extends EventEmitter {
     return this
   }
 
-  stop() {
-    this.server.close()
+  stop(serverCloseCallback) {
+    this.server.close(serverCloseCallback)
     this.server.removeAllListeners()
     this.server = undefined
 
