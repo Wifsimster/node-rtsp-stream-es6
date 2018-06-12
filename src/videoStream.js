@@ -28,13 +28,14 @@ class VideoStream extends EventEmitter {
       streamHeader.writeUInt16BE(this.height, 6)
       socket.send(streamHeader)
 
-      this.on('camdata', (data) => {
-        this.server.clients.forEach((client) => {
-          if(client.readyState === WebSocket.OPEN) { client.send(data) }
-        })
-      })
-
       socket.on('close', () => { console.log(`${this.name} disconnected !`) })
+    })
+
+    this.on('camdata', (data) => {
+      for (let i in this.server.clients) {
+        let client = this.server.clients[i]
+        if(client.readyState === WebSocket.OPEN) { client.send(data) }
+      }
     })
   }
 
