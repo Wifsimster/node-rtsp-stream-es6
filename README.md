@@ -54,4 +54,4 @@ ws.on('message', (data, flags) => {
 })
 ```
 
-You can find a live stream JSMPEG example here : https://github.com/phoboslab/jsmpeg/blob/master/stream-example.html
+You can find a live stream JSMPEG example here : https://github.com/phoboslab/jsmpeg/blob/master/view-stream.html
