@@ -25,7 +25,7 @@ npm i node-rtsp-stream-es6
 ## Server
 
 ```javascript
-const Stream = require('videoStream')
+const Stream = require('node-rtsp-stream-es6')
 
 const options = {
   name: 'streamName',
